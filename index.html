@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paddhai Hub | Premium Study Material</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="container nav-content">
+            <!-- Logo -->
+            <div class="logo">
+                <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
+            </div>
+            
+            <!-- Desktop Search -->
+            <div class="search-bar desktop-only">
+                <input type="text" placeholder="Search for notes, cheat sheets...">
+                <button><i class="ri-search-line"></i></button>
+            </div>
+
+            <!-- Desktop Actions -->
+            <div class="nav-actions desktop-only">
+                <button class="premium-btn"><i class="ri-vip-crown-fill"></i> Premium</button>
+                <div class="user-icon"><i class="ri-user-3-line"></i></div>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button class="menu-toggle mobile-only" onclick="toggleMenu()">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Slide-out Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="logo">
+                <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
+            </div>
+            <button class="close-btn" onclick="toggleMenu()"><i class="ri-close-line"></i></button>
+        </div>
+        <div class="mobile-menu-content">
+            <!-- Mobile Search -->
+            <div class="mobile-search">
+                <input type="text" placeholder="Search notes...">
+                <button><i class="ri-search-line"></i></button>
+            </div>
+            
+            <a href="#" class="mobile-link active">Home</a>
+            <a href="#" class="mobile-link">My Downloads</a>
+            <a href="#" class="mobile-link">Toppers' Copies</a>
+            
+            <hr style="border-color: #333; margin: 20px 0;">
+            
+            <button class="premium-btn full-width"><i class="ri-vip-crown-fill"></i> Get Premium</button>
+            <button class="cta-btn full-width" style="margin-top: 10px;">Login / Sign Up</button>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="container main-layout">
+        
+        <!-- NEW: Clean Hero Section -->
+        <section class="hero-banner">
+            <div class="hero-content">
+                <div class="hero-badge">🚀 Exam Season Special</div>
+                <h1>Your <span class="highlight">Study Superpower</span> is Here.</h1>
+                <p>Access premium handwritten notes, toppers' cheat sheets, and secret exam hacks used by the top 1% of students.</p>
+                
+                <div class="hero-buttons">
+                    <button class="cta-primary" onclick="scrollToGrid()">Start Learning <i class="ri-arrow-right-line"></i></button>
+                    <div class="hero-stat">
+                        <span class="stat-number">10k+</span>
+                        <span class="stat-label">Students Active</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative Element (CSS only, no images needed) -->
+            <div class="hero-glow"></div>
+        </section>
+
+        <!-- Subject Filter Bar -->
+        <div class="subject-tabs-container">
+            <div class="subject-tabs">
+                <button class="tab-btn active" onclick="filterBooks('all', this)">All</button>
+                <button class="tab-btn" onclick="filterBooks('math', this)">Mathematics</button>
+                <button class="tab-btn" onclick="filterBooks('science', this)">Science</button>
+                <button class="tab-btn" onclick="filterBooks('sst', this)">Social Science</button>
+                <button class="tab-btn" onclick="filterBooks('english', this)">English</button>
+            </div>
+        </div>
+
+        <!-- Book Grid -->
+        <div class="section-header">
+            <h2 id="grid-title">Top Rated Material</h2>
+        </div>
+
+        <div id="book-grid" class="book-grid">
+            <!-- Books injected via JS -->
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <div class="logo">
+                    <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
+                </div>
+                <p>The #1 platform for students to ace their exams with premium notes.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="#">About Us</a>
+                <a href="#">Contact Support</a>
+                <a href="#">Refund Policy</a>
+            </div>
+            <div class="footer-col">
+                <h4>Subjects</h4>
+                <a href="#">Mathematics</a>
+                <a href="#">Science</a>
+                <a href="#">Social Science</a>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="ri-instagram-line"></i></a>
+                    <a href="#"><i class="ri-twitter-x-line"></i></a>
+                    <a href="#"><i class="ri-youtube-fill"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Purchase Modal -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Secure Checkout</h3>
+                <button onclick="closeModal()"><i class="ri-close-line"></i></button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="item-summary">
+                    <img id="modal-img" src="" alt="">
+                    <div>
+                        <h4 id="modal-title">Book Title</h4>
+                        <span id="modal-price" class="price-tag">₹99</span>
+                    </div>
+                </div>
+
+                <form id="purchase-form" action="https://api.web3forms.com/submit" method="POST">
+                    <!-- Replace with your Access Key -->
+                    <input type="hidden" name="access_key" value="032b9fce-da5a-4b89-886d-241fbb5c6736">
+                    <input type="hidden" name="subject" value="New Order">
+                    <input type="hidden" name="book_details" id="hidden-book-name">
+
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" required placeholder="Rahul Sharma">
+                    </div>
+                    <div class="input-group">
+                        <label>School Name</label>
+                        <input type="text" name="school" required placeholder="DPS / KV">
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" required placeholder="+91 98765 43210">
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required placeholder="rahul@example.com">
+                    </div>
+
+                    <div class="info-note">
+                        <i class="ri-secure-payment-line"></i>
+                        PDF will be sent to your email instantly.
+                    </div>
+
+                    <button type="submit" class="cta-btn">Pay ₹99 & Get Access</button>
+                </form>
+
+                <div id="success-msg" class="success-box" style="display: none;">
+                    <i class="ri-checkbox-circle-fill"></i>
+                    <h3>Success!</h3>
+                    <p>Check your email for the PDF.</p>
+                    <button class="cta-btn" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
