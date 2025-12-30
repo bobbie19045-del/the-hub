@@ -1,161 +1,161 @@
-// Mobile Menu Logic
-function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    menu.classList.toggle('active');
-}
-
-// Scroll to Grid
-function scrollToGrid() {
-    document.getElementById('grid-title').scrollIntoView({ behavior: 'smooth' });
-}
-
-// Data: 4 Books for 4 Subjects, all ₹99
+// --- DATA ---
 const books = [
-    {
-        id: 1,
-        category: 'math',
-        title: "Mathematics: The Ultimate Cheat Sheet",
-        author: "Toppers' Academy",
-        image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=600&auto=format&fit=crop",
-        pages: "150 pgs",
-        rating: "4.9"
-    },
-    {
-        id: 2,
-        category: 'science',
-        title: "Science Lab: Complete Formulas",
-        author: "Prof. H. Verma",
-        image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop",
-        pages: "120 pgs",
-        rating: "4.8"
-    },
-    {
-        id: 3,
-        category: 'sst',
-        title: "Social Science: History & Civics Map",
-        author: "UPSC Mentors",
-        image: "https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=600&auto=format&fit=crop",
-        pages: "90 pgs",
-        rating: "4.7"
-    },
-    {
-        id: 4,
-        category: 'english',
-        title: "English Grammar & Literature Guide",
-        author: "Oxford Prep",
-        image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600&auto=format&fit=crop",
-        pages: "200 pgs",
-        rating: "4.9"
-    }
+    // Mathematics
+    { id: 1, subject: 'math', class: '10', title: "Class 10 Math Formula Book", price: 99, img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400" },
+    { id: 2, subject: 'math', class: '12', title: "Class 12 Calculus Guide", price: 99, img: "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=400" },
+    
+    // Science
+    { id: 3, subject: 'science', class: '10', title: "Class 10 Science Lab Manual", price: 99, img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400" },
+    { id: 4, subject: 'science', class: '12', title: "Physics Vol 1: Mechanics", price: 99, img: "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=400" },
+
+    // SST
+    { id: 5, subject: 'sst', class: '10', title: "History & Civics Mind Maps", price: 99, img: "https://images.unsplash.com/photo-1447069387593-a5de0862481e?w=400" },
+
+    // English
+    { id: 6, subject: 'english', class: '12', title: "Flamingo & Vistas Summary", price: 99, img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400" },
+    { id: 7, subject: 'english', class: '10', title: "English Grammar Handbook", price: 99, img: "https://images.unsplash.com/photo-1474932430478-367dbb6832c1?w=400" },
+
+    // Hindi
+    { id: 8, subject: 'hindi', class: '10', title: "Hindi Kshitij Quick Notes", price: 99, img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400" },
+    { id: 9, subject: 'hindi', class: '12', title: "Hindi Aroh & Vitan Guide", price: 99, img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400" },
+
+    // Punjabi
+    { id: 10, subject: 'punjabi', class: '10', title: "Punjabi Vyakaran (Grammar)", price: 99, img: "https://images.unsplash.com/photo-1535905557558-afc4877a26fc?w=400" },
+    { id: 11, subject: 'punjabi', class: '12', title: "Punjabi Literature Summary", price: 99, img: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400" }
 ];
 
+// --- STATE VARIABLES ---
+let currentSubject = '';
+let currentClass = '';
+
+// --- DOM ELEMENTS ---
 const grid = document.getElementById('book-grid');
-const gridTitle = document.getElementById('grid-title');
+const resultsSection = document.getElementById('results-section');
+const classModal = document.getElementById('class-modal');
+const purchaseModal = document.getElementById('purchase-modal');
 
-// 1. Filter Logic
-function filterBooks(category, btnElement) {
-    if (btnElement) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
-    }
-
-    let filteredBooks = [];
-    if (category === 'all') {
-        filteredBooks = books;
-        gridTitle.innerText = "All Study Material";
-    } else {
-        filteredBooks = books.filter(book => book.category === category);
-        const titles = { 'math': 'Mathematics', 'science': 'Science', 'sst': 'Social Science', 'english': 'English' };
-        gridTitle.innerText = titles[category] + " Material";
-    }
-
-    renderGrid(filteredBooks);
+// --- SCROLL ACTION ---
+function scrollToSubjects() {
+    document.getElementById('subject-section').scrollIntoView({ behavior: 'smooth' });
 }
 
-// 2. Render Grid
+// --- MOBILE MENU ---
+function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('active');
+}
+
+// --- CLASS MODAL LOGIC ---
+function openClassModal(subject) {
+    currentSubject = subject;
+    classModal.classList.add('active');
+}
+
+function closeClassModal() {
+    classModal.classList.remove('active');
+}
+
+// --- CLASS SELECTION & RENDERING ---
+function selectClass(cls) {
+    currentClass = cls;
+    closeClassModal(); // Close modal
+    
+    // Filter
+    const filtered = books.filter(b => b.subject === currentSubject && b.class === cls);
+    
+    // Update Title
+    const subTitle = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
+    document.getElementById('grid-title').innerText = `${subTitle} (Class ${cls})`;
+    
+    renderGrid(filtered);
+    
+    // Show results
+    resultsSection.style.display = 'block';
+    resultsSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// --- RENDER GRID ---
 function renderGrid(data) {
-    if (data.length === 0) {
-        grid.innerHTML = `<p style="color:#666; width:100%; grid-column:1/-1; text-align:center;">No books found in this category.</p>`;
+    if(data.length === 0) {
+        grid.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#888; padding: 40px;">No notes uploaded for this combination yet. Check back soon!</p>`;
         return;
     }
-
+    
     grid.innerHTML = data.map(book => `
-        <div class="book-card" onclick="openModal(${book.id})">
+        <div class="book-card" onclick="openBuyModal(${book.id})">
             <div class="book-thumb">
-                <img src="${book.image}" alt="${book.title}">
+                <img src="${book.img}" alt="${book.title}">
             </div>
             <div class="book-info">
-                <div class="book-meta">
-                    <span style="text-transform:uppercase; font-size:10px; color:var(--accent); font-weight:bold;">${book.category}</span>
-                    <span><i class="ri-star-fill" style="color:gold"></i> ${book.rating}</span>
-                </div>
-                <h3 class="book-title">${book.title}</h3>
-                <p style="color:#666; font-size:12px; margin-bottom:10px;">By ${book.author} • ${book.pages}</p>
+                <div class="book-title">${book.title}</div>
                 <div class="price-row">
-                    <span class="price">₹99</span>
-                    <button class="buy-btn">BUY NOW</button>
+                    <span class="price">₹${book.price}</span>
+                    <button class="buy-btn">BUY</button>
                 </div>
             </div>
         </div>
     `).join('');
 }
 
-// 3. Modal Logic
-const modal = document.getElementById('modal-overlay');
-const form = document.getElementById('purchase-form');
-const successMsg = document.getElementById('success-msg');
+// --- SEARCH ---
+function searchBooks(query) {
+    if(!query) {
+        if(resultsSection.style.display !== 'none') {
+             // Optional: Do nothing or hide if you want
+        }
+        return;
+    }
+    
+    query = query.toLowerCase();
+    const filtered = books.filter(b => b.title.toLowerCase().includes(query));
+    
+    document.getElementById('grid-title').innerText = `Search Results for "${query}"`;
+    resultsSection.style.display = 'block';
+    renderGrid(filtered);
+}
 
-window.openModal = (id) => {
+function resetFilters() {
+    resultsSection.style.display = 'none';
+    const heroInput = document.getElementById('hero-search-input');
+    const deskInput = document.getElementById('desktop-search');
+    if(heroInput) heroInput.value = '';
+    if(deskInput) deskInput.value = '';
+}
+
+// --- PURCHASE MODAL ---
+function openBuyModal(id) {
     const book = books.find(b => b.id === id);
     if(book) {
-        document.getElementById('modal-img').src = book.image;
+        document.getElementById('modal-img').src = book.img;
         document.getElementById('modal-title').innerText = book.title;
-        document.getElementById('hidden-book-name').value = `Book: ${book.title} | Price: ₹99`;
-        
-        form.style.display = 'block';
-        successMsg.style.display = 'none';
-        modal.classList.add('active');
+        document.getElementById('hidden-book-name').value = book.title;
+        purchaseModal.classList.add('active');
     }
 }
 
-window.closeModal = () => {
-    modal.classList.remove('active');
+function closePurchaseModal() {
+    purchaseModal.classList.remove('active');
 }
 
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-});
+// Close modals on outside click
+window.onclick = function(event) {
+    if (event.target == classModal) closeClassModal();
+    if (event.target == purchaseModal) closePurchaseModal();
+}
 
-// 4. Handle Form
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('button[type="submit"]');
-    const originalText = btn.innerText;
-    btn.innerText = "Processing...";
-    btn.disabled = true;
-
-    const formData = new FormData(form);
+// --- FORM SUBMISSION ---
+document.getElementById('purchase-form').addEventListener('submit', function(e) {
+    // Note: To use Web3Forms properly, remove e.preventDefault() in production
+    e.preventDefault(); 
     
-    try {
-        const response = await fetch("https://api.web3forms.com/submit", {
-            method: "POST",
-            body: formData
-        });
-
-        if (response.status === 200) {
-            form.style.display = 'none';
-            successMsg.style.display = 'block';
-        } else {
-            alert("Error submitting form.");
-        }
-    } catch (error) {
-        alert("Connection error.");
-    } finally {
+    const btn = this.querySelector('button[type="submit"]');
+    const originalText = btn.innerText;
+    btn.innerText = 'Processing...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+        this.style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
         btn.innerText = originalText;
         btn.disabled = false;
-        form.reset();
-    }
+    }, 1500);
 });
-
-// Init
-renderGrid(books);
