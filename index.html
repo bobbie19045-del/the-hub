@@ -9,216 +9,251 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav>
-        <div class="container nav-content">
-            <div class="logo" onclick="location.reload()">
-                <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
-            </div>
-            
-            <!-- Desktop Search -->
-            <div class="search-bar desktop-only">
-                <input type="text" id="desktop-search" placeholder="Search notes, questions..." onkeyup="searchBooks(this.value)">
-                <button><i class="ri-search-line"></i></button>
-            </div>
-
-            <div class="nav-actions">
-                <button class="premium-btn desktop-only"><i class="ri-vip-crown-fill"></i> Premium Access</button>
-                <button class="menu-toggle mobile-only" onclick="toggleMenu()">
-                    <i class="ri-menu-line"></i>
-                </button>
-            </div>
+<!-- Navbar -->
+<nav>
+    <div class="container nav-content">
+        <div class="logo" onclick="location.reload()">
+            <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
         </div>
-    </nav>
+        
+        <!-- REMOVED SEARCH BAR HERE -->
 
-    <!-- Mobile Slide-out Menu -->
-    <div class="mobile-menu" id="mobile-menu">
-        <div class="mobile-menu-header">
-            <div class="logo">
-                <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
-            </div>
-            <button class="close-btn" onclick="toggleMenu()"><i class="ri-close-line"></i></button>
-        </div>
-        <div class="mobile-menu-content">
-            <a href="#" class="mobile-link active">Home</a>
-            <a href="#" class="mobile-link">My Downloads</a>
-            <a href="#" class="mobile-link">Toppers' Copies</a>
-            <a href="#" class="mobile-link">Contact Support</a>
-            <button class="premium-btn full-width" style="margin-top:20px; background:var(--accent); color:#000;">
-                <i class="ri-vip-crown-fill"></i> Get Premium
+        <div class="nav-actions">
+            <button class="premium-btn desktop-only"><i class="ri-vip-crown-fill"></i> Premium Access</button>
+            <button class="menu-toggle mobile-only" onclick="toggleMenu()">
+                <i class="ri-menu-line"></i>
             </button>
         </div>
     </div>
+</nav>
 
-    <!-- Main Layout -->
-    <div class="container main-layout">
-        
-        <!-- NEW HERO SECTION -->
-        <section class="hero-banner">
-            <div class="hero-grid-bg"></div> <!-- Background Pattern -->
-            <div class="hero-glow"></div>    <!-- Orange Glow -->
-            
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <span class="dot"></span> Exam Season Special
-                </div>
-                
-                <h1>Your <span class="highlight">Unfair Advantage</span><br>in Exams Starts Here.</h1>
-                
-                <p>Download premium handwritten notes, chapter-wise formulas, and cheat sheets used by the top 1% of students.</p>
-                
-                <div class="hero-actions">
-                    <button class="cta-primary" onclick="scrollToSubjects()">
-                        Start Studying Now <i class="ri-arrow-down-line"></i>
-                    </button>
-                    <div class="social-proof">
-                        <div class="avatars">
-                            <i class="ri-user-smile-fill"></i>
-                            <i class="ri-user-smile-fill"></i>
-                            <i class="ri-user-smile-fill"></i>
-                        </div>
-                        <span>10k+ Students joined this week</span>
-                    </div>
-                </div>
-
-                <!-- Mobile Search (Visible only on mobile) -->
-                <div class="hero-search mobile-only">
-                    <i class="ri-search-line"></i>
-                    <input type="text" id="hero-search-input" placeholder="Search Math, Science..." onkeyup="searchBooks(this.value)">
-                </div>
-            </div>
-        </section>
-
-        <!-- Subject Cards Section -->
-        <div id="subject-section" class="section-header">
-            <h2>Select Your Subject</h2>
-        </div>
-        
-        <div class="subject-grid">
-            <div class="sub-card" onclick="openClassModal('math')">
-                <i class="ri-calculator-fill icon-bg"></i>
-                <h3>Mathematics</h3>
-            </div>
-            <div class="sub-card" onclick="openClassModal('science')">
-                <i class="ri-flask-fill icon-bg"></i>
-                <h3>Science</h3>
-            </div>
-            <div class="sub-card" onclick="openClassModal('sst')">
-                <i class="ri-earth-fill icon-bg"></i>
-                <h3>Social Science</h3>
-            </div>
-            <div class="sub-card" onclick="openClassModal('english')">
-                <i class="ri-book-mark-fill icon-bg"></i>
-                <h3>English</h3>
-            </div>
-            <div class="sub-card" onclick="openClassModal('hindi')">
-                <i class="ri-translate-2 icon-bg"></i>
-                <h3>Hindi</h3>
-            </div>
-            <div class="sub-card" onclick="openClassModal('punjabi')">
-                <i class="ri-quill-pen-fill icon-bg"></i>
-                <h3>Punjabi</h3>
-            </div>
-        </div>
-
-        <!-- Filtered Results Grid -->
-        <div id="results-section" style="display:none; margin-top: 40px; min-height: 400px;">
-            <div class="section-header">
-                <h2 id="grid-title">Available Notes</h2>
-                <button onclick="resetFilters()" class="reset-btn"><i class="ri-close-circle-line"></i> Clear</button>
-            </div>
-            <div id="book-grid" class="book-grid">
-                <!-- Books injected via JS -->
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="logo" style="justify-content: center; margin-bottom: 10px;">
+<!-- Mobile Slide-out Menu -->
+<div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+        <div class="logo">
             <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
         </div>
-        <p>&copy; 2025 Paadhai Hub Inc. Study Hard, Play Hard.</p>
-    </footer>
+        <button class="close-btn" onclick="toggleMenu()"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="mobile-menu-content">
+        <a href="#" class="mobile-link active">Home</a>
+        <a href="#" class="mobile-link">My Downloads</a>
+        <a href="#" class="mobile-link">Toppers' Copies</a>
+        <!-- Updated Link to scroll to Contact Section -->
+        <a href="#contact-support" class="mobile-link" onclick="toggleMenu()">Contact Support</a>
+        <button class="premium-btn full-width" style="margin-top:20px; background:var(--accent); color:#000;">
+            <i class="ri-vip-crown-fill"></i> Get Premium
+        </button>
+    </div>
+</div>
 
-    <!-- Class Selection Modal -->
-    <div id="class-modal" class="modal-overlay">
-        <div class="modal-container class-modal-box">
-            <div class="modal-header">
-                <h3>Select Your Class</h3>
-                <button onclick="closeClassModal()"><i class="ri-close-line"></i></button>
+<!-- Main Layout -->
+<div class="container main-layout">
+    
+    <!-- HERO SECTION -->
+    <section class="hero-banner">
+        <div class="hero-grid-bg"></div>
+        <div class="hero-glow"></div> 
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span> Exam Season Special
             </div>
-            <div class="class-grid">
-                <button class="class-btn" onclick="selectClass('9')">
-                    <span class="cls-num">09</span> Class
+            
+            <h1>Your <span class="highlight">Unfair Advantage</span><br>in Exams Starts Here.</h1>
+            
+            <p>Download premium handwritten notes, chapter-wise formulas, and cheat sheets used by the top 1% of students.</p>
+            
+            <div class="hero-actions">
+                <button class="cta-primary" onclick="scrollToSubjects()">
+                    Start Studying Now <i class="ri-arrow-down-line"></i>
                 </button>
-                <button class="class-btn" onclick="selectClass('10')">
-                    <span class="cls-num">10</span> Class
-                </button>
-                <button class="class-btn" onclick="selectClass('11')">
-                    <span class="cls-num">11</span> Class
-                </button>
-                <button class="class-btn" onclick="selectClass('12')">
-                    <span class="cls-num">12</span> Class
-                </button>
+                <div class="social-proof">
+                    <div class="avatars">
+                        <i class="ri-user-smile-fill"></i>
+                        <i class="ri-user-smile-fill"></i>
+                        <i class="ri-user-smile-fill"></i>
+                    </div>
+                    <span>10k+ Students joined this week</span>
+                </div>
             </div>
+
+            <!-- REMOVED MOBILE SEARCH HERE -->
+        </div>
+    </section>
+
+    <!-- Subject Cards Section -->
+    <div id="subject-section" class="section-header">
+        <h2>Select Your Subject</h2>
+    </div>
+    
+    <div class="subject-grid">
+        <div class="sub-card" onclick="openClassModal('math')">
+            <i class="ri-calculator-fill icon-bg"></i>
+            <h3>Mathematics</h3>
+        </div>
+        <div class="sub-card" onclick="openClassModal('science')">
+            <i class="ri-flask-fill icon-bg"></i>
+            <h3>Science</h3>
+        </div>
+        <div class="sub-card" onclick="openClassModal('sst')">
+            <i class="ri-earth-fill icon-bg"></i>
+            <h3>Social Science</h3>
+        </div>
+        <div class="sub-card" onclick="openClassModal('english')">
+            <i class="ri-book-mark-fill icon-bg"></i>
+            <h3>English</h3>
+        </div>
+        <div class="sub-card" onclick="openClassModal('hindi')">
+            <i class="ri-translate-2 icon-bg"></i>
+            <h3>Hindi</h3>
+        </div>
+        <div class="sub-card" onclick="openClassModal('punjabi')">
+            <i class="ri-quill-pen-fill icon-bg"></i>
+            <h3>Punjabi</h3>
         </div>
     </div>
 
-    <!-- Purchase Modal -->
-    <div id="purchase-modal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3>Secure Checkout</h3>
-                <button onclick="closePurchaseModal()"><i class="ri-close-line"></i></button>
+    <!-- Filtered Results Grid -->
+    <div id="results-section" style="display:none; margin-top: 40px; min-height: 400px;">
+        <div class="section-header">
+            <h2 id="grid-title">Available Notes</h2>
+            <button onclick="resetFilters()" class="reset-btn"><i class="ri-close-circle-line"></i> Clear</button>
+        </div>
+        <div id="book-grid" class="book-grid">
+            <!-- Books injected via JS -->
+        </div>
+    </div>
+
+    <!-- NEW CONTACT SUPPORT SECTION -->
+    <section id="contact-support" style="margin-top: 80px; margin-bottom: 40px;">
+        <div class="section-header">
+            <h2>Contact Support</h2>
+        </div>
+        <div class="contact-container">
+            <div class="contact-text">
+                <h3>Have questions?</h3>
+                <p style="color: #aaa; margin-bottom: 20px;">Fill out the form and our team will get back to you within 24 hours.</p>
+                <div class="contact-methods">
+                    <div class="method"><i class="ri-mail-fill"></i> support@paadhaihub.com</div>
+                    <div class="method"><i class="ri-whatsapp-fill"></i> +91 98765 43210</div>
+                </div>
             </div>
             
-            <div class="modal-body">
-                <div class="item-summary">
-                    <img id="modal-img" src="" alt="">
-                    <div>
-                        <h4 id="modal-title">Book Title</h4>
-                        <span id="modal-price" class="price-tag">₹99</span>
-                    </div>
-                </div>
-
-                <form id="purchase-form" action="https://api.web3forms.com/submit" method="POST">
-                    <input type="hidden" name="access_key" value="1d5bd79a-0439-4bc9-bad4-085a262d6eed"> 
-                    <input type="hidden" name="subject" value="New Order">
-                    <input type="hidden" name="book_details" id="hidden-book-name">
+            <div class="contact-form-box">
+                <!-- Web3Forms Integration -->
+                <form action="https://api.web3forms.com/submit" method="POST">
+                    <!-- Replace with your actual Access Key -->
+                    <input type="hidden" name="access_key" value="032b9fce-da5a-4b89-886d-241fbb5c6736">
+                    <input type="hidden" name="subject" value="New Support Request from Paadhai Hub">
 
                     <div class="input-group">
-                        <label>Full Name</label>
-                        <input type="text" name="name" required placeholder="Enter your name">
-                    </div>
-                    <div class="input-group">
-                        <label>Phone Number (WhatsApp)</label>
-                        <input type="tel" name="phone" required placeholder="+91 XXXXX XXXXX">
+                        <label>Your Name</label>
+                        <input type="text" name="name" required placeholder="John Doe">
                     </div>
                     <div class="input-group">
                         <label>Email Address</label>
-                        <input type="email" name="email" required placeholder="email@example.com">
+                        <input type="email" name="email" required placeholder="john@example.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Message</label>
+                        <textarea name="message" rows="4" required placeholder="How can we help you?" style="width:100%; padding:12px; background:#0a0a0a; border:1px solid #333; color:#fff; border-radius:6px; outline:none; resize:none;"></textarea>
                     </div>
 
-                    <div class="info-note">
-                        <i class="ri-secure-payment-line"></i>
-                        <span>Secure Payment. PDF link sent instantly via Email.</span>
-                    </div>
-
-                    <button type="submit" class="cta-btn">Pay ₹99 & Download PDF</button>
+                    <button type="submit" class="cta-btn">Send Message</button>
                 </form>
+            </div>
+        </div>
+    </section>
 
-                <div id="success-msg" class="success-box" style="display: none;">
-                    <i class="ri-checkbox-circle-fill"></i>
-                    <h3>Success!</h3>
-                    <p>Order placed. Check your email for the PDF link.</p>
-                    <button class="cta-btn" onclick="closePurchaseModal()">Close Window</button>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="logo" style="justify-content: center; margin-bottom: 10px;">
+        <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
+    </div>
+    <p>&copy; 2025 Paadhai Hub Inc. Study Hard, Play Hard.</p>
+</footer>
+
+<!-- Class Selection Modal -->
+<div id="class-modal" class="modal-overlay">
+    <div class="modal-container class-modal-box">
+        <div class="modal-header">
+            <h3>Select Your Class</h3>
+            <button onclick="closeClassModal()"><i class="ri-close-line"></i></button>
+        </div>
+        <div class="class-grid">
+            <button class="class-btn" onclick="selectClass('9')">
+                <span class="cls-num">09</span> Class
+            </button>
+            <button class="class-btn" onclick="selectClass('10')">
+                <span class="cls-num">10</span> Class
+            </button>
+            <button class="class-btn" onclick="selectClass('11')">
+                <span class="cls-num">11</span> Class
+            </button>
+            <button class="class-btn" onclick="selectClass('12')">
+                <span class="cls-num">12</span> Class
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Purchase Modal -->
+<div id="purchase-modal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Secure Checkout</h3>
+            <button onclick="closePurchaseModal()"><i class="ri-close-line"></i></button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="item-summary">
+                <img id="modal-img" src="" alt="">
+                <div>
+                    <h4 id="modal-title">Book Title</h4>
+                    <span id="modal-price" class="price-tag">₹99</span>
                 </div>
+            </div>
+
+            <form id="purchase-form" action="https://api.web3forms.com/submit" method="POST">
+                <input type="hidden" name="access_key" value="032b9fce-da5a-4b89-886d-241fbb5c6736"> 
+                <input type="hidden" name="subject" value="New Order">
+                <input type="hidden" name="book_details" id="hidden-book-name">
+
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required placeholder="Enter your name">
+                </div>
+                <div class="input-group">
+                    <label>Phone Number (WhatsApp)</label>
+                    <input type="tel" name="phone" required placeholder="+91 XXXXX XXXXX">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="email@example.com">
+                </div>
+
+                <div class="info-note">
+                    <i class="ri-secure-payment-line"></i>
+                    <span>Secure Payment. PDF link sent instantly via Email.</span>
+                </div>
+
+                <button type="submit" class="cta-btn">Pay ₹99 & Download PDF</button>
+            </form>
+
+            <div id="success-msg" class="success-box" style="display: none;">
+                <i class="ri-checkbox-circle-fill"></i>
+                <h3>Success!</h3>
+                <p>Order placed. Check your email and whatsapp for the PDF link and Payment link. Your order will arrive within a few minutes or hours</p>
+                <button class="cta-btn" onclick="closePurchaseModal()">Close Window</button>
             </div>
         </div>
     </div>
-
-    <script src="script.js"></script>
+</div>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
