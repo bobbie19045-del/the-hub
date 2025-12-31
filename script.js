@@ -78,7 +78,7 @@ function renderGrid(data) {
     if(!grid) return;
 
     if(data.length === 0) {
-        grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; padding: 40px;">No notes uploaded yet. Check Supabase!</p>';
+        grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; padding: 40px;">No notes uploaded yet. </p>';
         return;
     }
 
