@@ -6,18 +6,33 @@
     <title>Paadhai Hub | Premium Study Material</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Load Supabase Library -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* CSS for the Dark Mode Logo (Toggled by Admin) */
+        .logo-dark-mode .white-text {
+            color: #000000 !important;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        .logo-dark-mode .orange-box {
+            background-color: #000000 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+    </style>
 </head>
 <body>
 
 <!-- Navbar -->
 <nav>
     <div class="container nav-content">
-        <div class="logo" onclick="location.reload()">
-            <span class="white-text">Paadhai</span><span class="orange-box">Hub</span>
+        <!-- ID 'site-logo' used for switching -->
+        <div class="logo" id="site-logo" onclick="location.reload()">
+            <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
         </div>
         
-        <!-- REMOVED SEARCH BAR HERE -->
-
         <div class="nav-actions">
             <button class="premium-btn desktop-only"><i class="ri-vip-crown-fill"></i> Premium Access</button>
             <button class="menu-toggle mobile-only" onclick="toggleMenu()">
@@ -31,15 +46,12 @@
 <div class="mobile-menu" id="mobile-menu">
     <div class="mobile-menu-header">
         <div class="logo">
-            <span class="white-text">Paadhai</span><span class="orange-box">Hub</span>
+            <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
         </div>
         <button class="close-btn" onclick="toggleMenu()"><i class="ri-close-line"></i></button>
     </div>
     <div class="mobile-menu-content">
         <a href="#" class="mobile-link active">Home</a>
-        <a href="#" class="mobile-link">My Downloads</a>
-        <a href="#" class="mobile-link">Toppers' Copies</a>
-        <!-- Updated Link to scroll to Contact Section -->
         <a href="#contact-support" class="mobile-link" onclick="toggleMenu()">Contact Support</a>
         <button class="premium-btn full-width" style="margin-top:20px; background:var(--accent); color:#000;">
             <i class="ri-vip-crown-fill"></i> Get Premium
@@ -77,8 +89,6 @@
                     <span>10k+ Students joined this week</span>
                 </div>
             </div>
-
-            <!-- REMOVED MOBILE SEARCH HERE -->
         </div>
     </section>
 
@@ -125,7 +135,7 @@
         </div>
     </div>
 
-    <!-- NEW CONTACT SUPPORT SECTION -->
+    <!-- CONTACT SUPPORT SECTION -->
     <section id="contact-support" style="margin-top: 80px; margin-bottom: 40px;">
         <div class="section-header">
             <h2>Contact Support</h2>
@@ -135,7 +145,7 @@
                 <h3>Have questions?</h3>
                 <p style="color: #aaa; margin-bottom: 20px;">Fill out the form and our team will get back to you within 24 hours.</p>
                 <div class="contact-methods">
-                    <div class="method"><i class="ri-mail-fill"></i> support@paadhaihub.online</div>
+                    <div class="method"><i class="ri-mail-fill"></i> support@paadhaihub.com</div>
                     <div class="method"><i class="ri-whatsapp-fill"></i> +91 98765 43210</div>
                 </div>
             </div>
@@ -143,8 +153,7 @@
             <div class="contact-form-box">
                 <!-- Web3Forms Integration -->
                 <form action="https://api.web3forms.com/submit" method="POST">
-                    <!-- Replace with your actual Access Key -->
-                    <input type="hidden" name="access_key" value="032b9fce-da5a-4b89-886d-241fbb5c6736">
+                    <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
                     <input type="hidden" name="subject" value="New Support Request from Paadhai Hub">
 
                     <div class="input-group">
@@ -171,7 +180,7 @@
 <!-- Footer -->
 <footer class="site-footer">
     <div class="logo" style="justify-content: center; margin-bottom: 10px;">
-        <span class="white-text">Paadhai</span><span class="orange-box">Hub</span>
+        <span class="white-text">Paddhai</span><span class="orange-box">Hub</span>
     </div>
     <p>&copy; 2025 Paadhai Hub Inc. Study Hard, Play Hard.</p>
 </footer>
@@ -204,7 +213,7 @@
 <div id="purchase-modal" class="modal-overlay">
     <div class="modal-container">
         <div class="modal-header">
-            <h3>Secure Checkout</h3>
+            <h3 id="modal-title">Secure Checkout</h3>
             <button onclick="closePurchaseModal()"><i class="ri-close-line"></i></button>
         </div>
         
@@ -212,15 +221,13 @@
             <div class="item-summary">
                 <img id="modal-img" src="" alt="">
                 <div>
-                    <h4 id="modal-title">Book Title</h4>
+                    <h4 id="hidden-book-name">Book Title</h4>
                     <span id="modal-price" class="price-tag">₹99</span>
                 </div>
             </div>
 
-            <form id="purchase-form" action="https://api.web3forms.com/submit" method="POST">
-                <input type="hidden" name="access_key" value="032b9fce-da5a-4b89-886d-241fbb5c6736"> 
-                <input type="hidden" name="subject" value="New Order">
-                <input type="hidden" name="book_details" id="hidden-book-name">
+            <form id="purchase-form">
+                <input type="hidden" name="book_details" id="hidden-book-title-input">
 
                 <div class="input-group">
                     <label>Full Name</label>
@@ -243,18 +250,45 @@
                 <button type="submit" class="cta-btn">Pay ₹99 & Download PDF</button>
             </form>
 
-<div id="success-msg" class="success-box" style="display: none;">
-    <i class="ri-checkbox-circle-fill"></i>
-    <h3>Success!</h3>
-    <p>Order placed. Check your email within a few hours for the PDF link.</p>
-    <!-- UPDATE THIS BUTTON ONCLICK EVENT -->
-    <button class="cta-btn" onclick="closeSuccessPopup()">Close Window</button>
-</div>
+            <div id="success-msg" class="success-box" style="display: none;">
+                <i class="ri-checkbox-circle-fill"></i>
+                <h3>Success!</h3>
+                <p>Order placed. Check your email for the PDF link.</p>
+                <button class="cta-btn" onclick="closeSuccessPopup()">Close Window</button>
+            </div>
         </div>
     </div>
 </div>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
+
 <script src="script.js"></script>
+
+<!-- UPDATED LOGO CHECKER: Uses hardcoded keys since config.js is gone -->
+<script>
+    const LOGO_CHECK_URL = 'https://kooylsdmfsxqeejcwefp.supabase.co';
+    const LOGO_CHECK_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtvb3lsc2RtZnN4cWVlamN3ZWZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxNzMzNjksImV4cCI6MjA4Mjc0OTM2OX0.PA4U9v_t70c4n5sZhKIqTSe2jxxMeStLTdgax-19BHA';
+
+    async function checkLogoTheme() {
+        // Create a local client just for this check
+        const tempClient = supabase.createClient(LOGO_CHECK_URL, LOGO_CHECK_KEY);
+        
+        const { data } = await tempClient
+            .from('site_settings')
+            .select('setting_value')
+            .eq('setting_key', 'logo_style')
+            .single();
+        
+        if (data && data.setting_value === 'dark') {
+            document.getElementById('site-logo').classList.add('logo-dark-mode');
+            const footerLogo = document.querySelector('footer .logo');
+            if(footerLogo) footerLogo.classList.add('logo-dark-mode');
+            
+            // Mobile Menu Logo
+            const mobileLogo = document.querySelector('.mobile-menu-header .logo');
+            if(mobileLogo) mobileLogo.classList.add('logo-dark-mode');
+        }
+    }
+    document.addEventListener('DOMContentLoaded', checkLogoTheme);
+</script>
+
 </body>
 </html>
