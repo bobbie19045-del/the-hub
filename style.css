@@ -15,7 +15,7 @@ nav { background-color: rgba(10,10,10,0.9); padding: 15px 0; border-bottom: 1px 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 .nav-content { display: flex; justify-content: space-between; align-items: center; }
 .logo { font-size: 24px; font-weight: bold; cursor: pointer; display: flex; align-items: center; letter-spacing: -0.5px; }
-.orange-box { background: var(--accent); color: #000; padding: 2px 6px; border-radius: 4px; font-weight: 800; margin-left: 2px; }
+.orange-box { background: #000; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800; margin-left: 2px; }
 
 /* REMOVED SEARCH BAR CSS */
 
