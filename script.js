@@ -1,7 +1,8 @@
 // --- SUPABASE CONFIGURATION ---
 const SUPABASE_URL = 'https://kooylsdmfsxqeejcwefp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtvb3lsc2RtZnN4cWVlamN3ZWZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxNzMzNjksImV4cCI6MjA4Mjc0OTM2OX0.PA4U9v_t70c4n5sZhKIqTSe2jxxMeStLTdgax-19BHA';
-// FIX: We named this 'supabaseClient' instead of 'supabase' to avoid the name conflict
+
+// Initialize Supabase
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- STATE VARIABLES ---
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkPendingSuccess(); // Check if user has a pending success popup
 });
 
+// --- FETCH BOOKS ---
 async function fetchBooksFromSupabase() {
     const { data, error } = await supabaseClient
         .from('books')
@@ -35,13 +37,13 @@ async function fetchBooksFromSupabase() {
 
 // --- CHECK LOCAL STORAGE FOR PERSISTENT POPUP ---
 function checkPendingSuccess() {
-    // If the flag exists in local storage
+    // If the flag exists in local storage (meaning they paid/ordered)
     if (localStorage.getItem('pendingOrderSuccess') === 'true') {
         const form = document.getElementById('purchase-form');
         const successMsg = document.getElementById('success-msg');
         const modalTitle = document.getElementById('modal-title');
         
-        // Setup UI
+        // Setup UI to show success immediately
         if(form) form.style.display = 'none';
         if(successMsg) successMsg.style.display = 'block';
         if(modalTitle) modalTitle.innerText = "Order Successful";
@@ -66,6 +68,8 @@ function closeSuccessPopup() {
     setTimeout(() => {
         if(form) form.style.display = 'block';
         if(successMsg) successMsg.style.display = 'none';
+        const modalTitle = document.getElementById('modal-title');
+        if(modalTitle) modalTitle.innerText = "Secure Checkout";
     }, 300);
 }
 
@@ -143,33 +147,30 @@ function openBuyModal(id) {
     const book = books.find(b => b.id === id);
     if(book) {
         document.getElementById('modal-img').src = book.img_url;
-        document.getElementById('modal-title').innerText = book.title;
-        document.getElementById('hidden-book-name').value = book.title;
+        document.getElementById('hidden-book-name').innerText = book.title; // Display Title
+        document.getElementById('hidden-book-title-input').value = book.title; // Form Input
+        document.getElementById('modal-price').innerText = `₹${book.price}`;
         
         // Store price for the form logic
         const form = document.getElementById('purchase-form');
         if(form) {
             form.dataset.price = book.price;
-            // Ensure form is visible (in case it was hidden by success state previously)
-            form.style.display = 'block';
+            form.style.display = 'block'; // Ensure form is visible
         }
         document.getElementById('success-msg').style.display = 'none';
+        document.getElementById('modal-title').innerText = "Secure Checkout";
         
         purchaseModal.classList.add('active');
     }
 }
 
 function closePurchaseModal() {
-    // Only close if it's NOT the success screen (user must click the specific button to clear storage)
-    // Or we can just close it, but the storage remains until they click the specific button.
     purchaseModal.classList.remove('active');
 }
 
 // Close modals on outside click
 window.onclick = function(event) {
     if (event.target == classModal) closeClassModal();
-    // We allow closing purchase modal by clicking outside, 
-    // but if it was a success state, the flag remains in localStorage until they click "Close Window"
     if (event.target == purchaseModal) closePurchaseModal();
 }
 
@@ -226,14 +227,15 @@ if(purchaseForm) {
         purchaseForm.style.display = 'none';
         const successMsg = document.getElementById('success-msg');
         if(successMsg) successMsg.style.display = 'block';
+        document.getElementById('modal-title').innerText = "Order Successful";
+        
         btn.innerText = originalText;
         btn.disabled = false;
 
         // 5. REDIRECT TO UPI APP
         // We use a small timeout to allow the UI to update first
         setTimeout(() => {
-            // Dynamic Link: uses the actual book price
-            // Format: upi://pay?pa=ADDRESS&pn=NAME&am=AMOUNT&cu=INR
+            // UPI Link Format
             const upiUrl = `upi://pay?pa=gurjotsingh0602@fam&pn=PaadhaiHub&am=${amount}&cu=INR`;
             
             // Redirect user
