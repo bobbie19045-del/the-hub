@@ -11,15 +11,16 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
-        /* CSS for the Dark Mode Logo (Toggled by Admin) */
-        .logo-dark-mode .white-text {
-            color: #000000 !important;
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
-        }
-        .logo-dark-mode .orange-box {
-            background-color: #000000 !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        /* 
+           LOGIC: 
+           Default style is in style.css (.orange-box = Orange BG, Black Text).
+           The class .logo-switched is added via JS if Admin sets 'logo_style' to 'dark'.
+        */
+
+        .logo-switched .orange-box {
+            background-color: #000000 !important; /* Black Background */
+            color: #FFFFFF !important;             /* White Text */
+            border: 1px solid #333;                /* Subtle border for visibility on dark nav */
         }
     </style>
 </head>
@@ -262,29 +263,35 @@
 
 <script src="script.js"></script>
 
-<!-- UPDATED LOGO CHECKER: Uses hardcoded keys since config.js is gone -->
+<!-- UPDATED LOGO CHECKER -->
 <script>
     const LOGO_CHECK_URL = 'https://kooylsdmfsxqeejcwefp.supabase.co';
     const LOGO_CHECK_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtvb3lsc2RtZnN4cWVlamN3ZWZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxNzMzNjksImV4cCI6MjA4Mjc0OTM2OX0.PA4U9v_t70c4n5sZhKIqTSe2jxxMeStLTdgax-19BHA';
 
     async function checkLogoTheme() {
-        // Create a local client just for this check
+        // Create a temp client just for this check
         const tempClient = supabase.createClient(LOGO_CHECK_URL, LOGO_CHECK_KEY);
         
+        // Fetch setting from Supabase
         const { data } = await tempClient
             .from('site_settings')
             .select('setting_value')
             .eq('setting_key', 'logo_style')
             .single();
         
+        // If Admin set it to 'dark', switch the specific classes
         if (data && data.setting_value === 'dark') {
-            document.getElementById('site-logo').classList.add('logo-dark-mode');
-            const footerLogo = document.querySelector('footer .logo');
-            if(footerLogo) footerLogo.classList.add('logo-dark-mode');
             
-            // Mobile Menu Logo
+            // 1. Header Logo
+            document.getElementById('site-logo').classList.add('logo-switched');
+            
+            // 2. Footer Logo (if exists)
+            const footerLogo = document.querySelector('footer .logo');
+            if(footerLogo) footerLogo.classList.add('logo-switched');
+            
+            // 3. Mobile Menu Logo (if exists)
             const mobileLogo = document.querySelector('.mobile-menu-header .logo');
-            if(mobileLogo) mobileLogo.classList.add('logo-dark-mode');
+            if(mobileLogo) mobileLogo.classList.add('logo-switched');
         }
     }
     document.addEventListener('DOMContentLoaded', checkLogoTheme);
