@@ -16,10 +16,12 @@ const classModal = document.getElementById('class-modal');
 const purchaseModal = document.getElementById('purchase-modal');
 
 // --- INITIAL LOAD ---
-document.addEventListener('DOMContentLoaded', fetchBooksFromSupabase);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchBooksFromSupabase();
+    checkPendingSuccess(); // Check if user has a pending success popup
+});
 
 async function fetchBooksFromSupabase() {
-    // FIX: Updated to use 'supabaseClient'
     const { data, error } = await supabaseClient
         .from('books')
         .select('*');
@@ -28,8 +30,43 @@ async function fetchBooksFromSupabase() {
         console.error('Error fetching books:', error);
     } else {
         books = data;
-        console.log("Books loaded:", books);
     }
+}
+
+// --- CHECK LOCAL STORAGE FOR PERSISTENT POPUP ---
+function checkPendingSuccess() {
+    // If the flag exists in local storage
+    if (localStorage.getItem('pendingOrderSuccess') === 'true') {
+        const form = document.getElementById('purchase-form');
+        const successMsg = document.getElementById('success-msg');
+        const modalTitle = document.getElementById('modal-title');
+        
+        // Setup UI
+        if(form) form.style.display = 'none';
+        if(successMsg) successMsg.style.display = 'block';
+        if(modalTitle) modalTitle.innerText = "Order Successful";
+        
+        // Show Modal
+        purchaseModal.classList.add('active');
+    }
+}
+
+// --- CLOSE SUCCESS POPUP (Clears Local Storage) ---
+function closeSuccessPopup() {
+    // Remove the flag so it doesn't show again
+    localStorage.removeItem('pendingOrderSuccess');
+    
+    // Reset UI
+    const form = document.getElementById('purchase-form');
+    const successMsg = document.getElementById('success-msg');
+    
+    purchaseModal.classList.remove('active');
+    
+    // Reset form display for next time
+    setTimeout(() => {
+        if(form) form.style.display = 'block';
+        if(successMsg) successMsg.style.display = 'none';
+    }, 300);
 }
 
 // --- SCROLL ACTION ---
@@ -58,9 +95,7 @@ function selectClass(cls) {
     currentClass = cls;
     closeClassModal();
 
-    // Filter using the data from Supabase
     const filtered = books.filter(b => b.subject === currentSubject && b.class === cls);
-
     const subTitle = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
     const titleEl = document.getElementById('grid-title');
     if(titleEl) titleEl.innerText = `${subTitle} (Class ${cls})`;
@@ -78,7 +113,7 @@ function renderGrid(data) {
     if(!grid) return;
 
     if(data.length === 0) {
-        grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; padding: 40px;">No notes uploaded yet. </p>';
+        grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; padding: 40px;">No notes uploaded yet. Check back soon!</p>';
         return;
     }
 
@@ -111,25 +146,34 @@ function openBuyModal(id) {
         document.getElementById('modal-title').innerText = book.title;
         document.getElementById('hidden-book-name').value = book.title;
         
-        // Store price for the form
+        // Store price for the form logic
         const form = document.getElementById('purchase-form');
-        if(form) form.dataset.price = book.price;
+        if(form) {
+            form.dataset.price = book.price;
+            // Ensure form is visible (in case it was hidden by success state previously)
+            form.style.display = 'block';
+        }
+        document.getElementById('success-msg').style.display = 'none';
         
         purchaseModal.classList.add('active');
     }
 }
 
 function closePurchaseModal() {
+    // Only close if it's NOT the success screen (user must click the specific button to clear storage)
+    // Or we can just close it, but the storage remains until they click the specific button.
     purchaseModal.classList.remove('active');
 }
 
 // Close modals on outside click
 window.onclick = function(event) {
     if (event.target == classModal) closeClassModal();
+    // We allow closing purchase modal by clicking outside, 
+    // but if it was a success state, the flag remains in localStorage until they click "Close Window"
     if (event.target == purchaseModal) closePurchaseModal();
 }
 
-// --- FORM SUBMISSION ---
+// --- FORM SUBMISSION (Supabase -> Web3Forms -> LocalStorage -> UPI) ---
 const purchaseForm = document.getElementById('purchase-form');
 
 if(purchaseForm) {
@@ -143,8 +187,9 @@ if(purchaseForm) {
 
         const formData = new FormData(purchaseForm);
         const formObject = Object.fromEntries(formData);
+        const amount = this.dataset.price || '99'; // Default to 99 if missing
 
-        // FIX: Updated to use 'supabaseClient'
+        // 1. SAVE TO SUPABASE
         const { error } = await supabaseClient
             .from('orders')
             .insert({
@@ -152,18 +197,18 @@ if(purchaseForm) {
                 customer_phone: formObject.phone,
                 customer_email: formObject.email,
                 book_title: formObject.book_details,
-                amount: this.dataset.price
+                amount: amount
             });
 
         if (error) {
             console.error("Supabase Error:", error);
-            alert("Error saving order. Please try again.");
+            alert("Connection error. Please try again.");
             btn.innerText = originalText;
             btn.disabled = false;
             return;
         }
 
-        // Backup: Send Email via Web3Forms
+        // 2. SEND EMAIL (WEB3FORMS)
         try {
             await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
@@ -171,15 +216,28 @@ if(purchaseForm) {
                 body: JSON.stringify(formObject)
             });
         } catch (err) {
-            console.log("Email failed, but database saved.");
+            console.log("Email trigger failed, but database saved.");
         }
 
-        // Success UI
+        // 3. SET LOCAL STORAGE FLAG (For persistent popup)
+        localStorage.setItem('pendingOrderSuccess', 'true');
+
+        // 4. UPDATE UI
         purchaseForm.style.display = 'none';
         const successMsg = document.getElementById('success-msg');
         if(successMsg) successMsg.style.display = 'block';
-        
         btn.innerText = originalText;
         btn.disabled = false;
+
+        // 5. REDIRECT TO UPI APP
+        // We use a small timeout to allow the UI to update first
+        setTimeout(() => {
+            // Dynamic Link: uses the actual book price
+            // Format: upi://pay?pa=ADDRESS&pn=NAME&am=AMOUNT&cu=INR
+            const upiUrl = `upi://pay?pa=gurjotsingh0602@fam&pn=PaadhaiHub&am=${amount}&cu=INR`;
+            
+            // Redirect user
+            window.location.href = upiUrl;
+        }, 1000);
     });
 }
